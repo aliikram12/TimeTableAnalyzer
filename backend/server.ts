@@ -10,16 +10,34 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+
+// Robust directory locator that finds the backend root containing engine.py
+// whether running in development (tsx server.ts) or production (node dist/server.js)
+function getBackendDir(): string {
+  if (process.env.BACKEND_ROOT && fs.existsSync(path.join(process.env.BACKEND_ROOT, "engine.py"))) {
+    return process.env.BACKEND_ROOT;
+  }
+  const currentDir = path.dirname(__filename);
+  if (fs.existsSync(path.join(currentDir, "engine.py"))) {
+    return currentDir;
+  }
+  const parentDir = path.dirname(currentDir);
+  if (fs.existsSync(path.join(parentDir, "engine.py"))) {
+    return parentDir;
+  }
+  return process.cwd();
+}
+
+const BACKEND_DIR = getBackendDir();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const PYTHON_BIN = process.env.PYTHON_BIN || (process.platform === "win32" ? "python" : "python3");
 
-// Directory configuration
-const UPLOADS_DIR = process.env.UPLOADS_DIR || path.join(__dirname, "uploads");
-const EXPORTS_DIR = process.env.EXPORTS_DIR || path.join(__dirname, "exports");
-const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, "data");
+// Directory configuration anchored to BACKEND_DIR
+const UPLOADS_DIR = process.env.UPLOADS_DIR || path.join(BACKEND_DIR, "uploads");
+const EXPORTS_DIR = process.env.EXPORTS_DIR || path.join(BACKEND_DIR, "exports");
+const DATA_DIR = process.env.DATA_DIR || path.join(BACKEND_DIR, "data");
 
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 if (!fs.existsSync(EXPORTS_DIR)) fs.mkdirSync(EXPORTS_DIR, { recursive: true });
@@ -78,7 +96,7 @@ const upload = multer({
 // Helper to run Python engine script
 function runPythonEngine(args: string[]): Promise<any> {
   return new Promise((resolve, reject) => {
-    const pythonScript = path.join(__dirname, "engine.py");
+    const pythonScript = path.join(BACKEND_DIR, "engine.py");
     const cmdArgs = [pythonScript, ...args];
     execFile(PYTHON_BIN, cmdArgs, { maxBuffer: 10 * 1024 * 1024 }, (err, stdout, stderr) => {
       if (err) {
@@ -102,7 +120,7 @@ function runPythonEngine(args: string[]): Promise<any> {
 // Helper to query SQLite database directly via Python script
 function queryDb(action: string, payload: any = {}): Promise<any> {
   return new Promise((resolve, reject) => {
-    const backendDir = __dirname.replace(/\\/g, "/");
+    const backendDir = BACKEND_DIR.replace(/\\/g, "/");
     const script = `
 import sys, json, os
 sys.path.insert(0, '${backendDir}')
