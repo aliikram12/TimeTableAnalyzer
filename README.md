@@ -2,21 +2,24 @@
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-2.0.0-E76F51?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-2.1.0-E76F51?style=for-the-badge)
 ![React](https://img.shields.io/badge/React-19.0.1-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-8.x-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=node.js&logoColor=white)
-![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 ![PyMuPDF](https://img.shields.io/badge/PyMuPDF-fitz-FF6F00?style=for-the-badge)
 ![ReportLab](https://img.shields.io/badge/ReportLab-PDF_Engine-C05633?style=for-the-badge)
+![Deployment](https://img.shields.io/badge/Deployment-Vercel_%2B_Render-000000?style=for-the-badge&logo=vercel&logoColor=white)
 
 <p align="center">
   <strong>An Intelligent University Timetable Extraction, Schedule Management, and Conflict Analysis Engine</strong>
   <br />
   Featuring a <em>Peach Cream & Terracotta</em> Neumorphic & Skeuomorphic tactile design system with 100% mobile responsiveness.
+  <br />
+  <strong>Architected with decoupled, standalone <code>frontend/</code> and <code>backend/</code> services ready for independent production deployment.</strong>
 </p>
 
 </div>
@@ -29,18 +32,19 @@
 - [Design Aesthetics & Theme](#-design-aesthetics--theme)
 - [Key Features](#-key-features)
 - [System Architecture](#-system-architecture)
-- [Tech Stack & Dependencies](#-tech-stack--dependencies)
-  - [Frontend Ecosystem](#frontend-ecosystem)
-  - [Backend & Python Engine](#backend--python-engine)
 - [Project Directory Structure](#-project-directory-structure)
+- [Tech Stack & Dependencies](#-tech-stack--dependencies)
+  - [Frontend Service (`frontend/`)](#frontend-service-frontend)
+  - [Backend Service (`backend/`)](#backend-service-backend)
 - [REST API Reference](#-rest-api-reference)
-- [Installation & Setup Guide](#-installation--setup-guide)
+- [Local Development Setup](#-local-development-setup)
   - [Prerequisites](#prerequisites)
-  - [1. Clone Repository](#1-clone-repository)
-  - [2. Install Node.js Dependencies](#2-install-nodejs-dependencies)
-  - [3. Install Python Dependencies](#3-install-python-dependencies)
-  - [4. Run in Development Mode](#4-run-in-development-mode)
-  - [5. Production Build & Execution](#5-production-build--execution)
+  - [1. Backend Setup](#1-backend-setup)
+  - [2. Frontend Setup](#2-frontend-setup)
+- [Production Deployment Guide](#-production-deployment-guide)
+  - [Deploying Frontend on Vercel](#deploying-frontend-on-vercel)
+  - [Deploying Backend on Render](#deploying-backend-on-render)
+  - [Deploying Backend on Railway](#deploying-backend-on-railway)
 - [Core Workflows](#-core-workflows)
   - [PDF Parsing Pipeline](#pdf-parsing-pipeline)
   - [Conflict & Anomaly Detection](#conflict--anomaly-detection)
@@ -53,30 +57,34 @@
 ## 🌟 Overview
 
 Academic timetables published by universities are almost universally distributed as dense, multi-page vector or grid PDF documents. These files often present severe usability hurdles:
-- **Overlapping/Clipped text**: Column and cell boundaries in PDFs often clip long course titles, instructor names, or room numbers.
+- **Overlapping/Clipped text**: Column and cell boundaries in PDFs clip long course titles, instructor names, or room numbers.
 - **Inability to filter**: Students and faculty cannot quickly isolate their own sections or courses from hundreds of classes.
 - **Undetected schedule conflicts**: Room double-bookings or overlapping instructor assignments often go unnoticed until classes begin.
 - **Poor mobile experience**: Viewing large matrix tables on phones requires continuous pinching and zooming.
 
-**Smart Timetable Analyzer** solves these challenges by combining a high-performance **Python extraction pipeline** (using `PyMuPDF`, `pdfplumber`, and `pandas`) with a **React 19 + TypeScript + Tailwind CSS v4** interface styled in a tactile **Neumorphic & Skeuomorphic Peach Cream & Terracotta** aesthetic.
+**Smart Timetable Analyzer** solves this through a decoupled, high-performance architecture:
+1. An intelligent Python parsing engine extracting coordinate-anchored lecture cells and resolving canonical degrees, sections, and shifts.
+2. An Express.js REST API providing fast filtering, conflict auditing, and export delivery.
+3. A React 19 single-page application crafted with a custom **Peach Cream & Terracotta** skeuomorphic design system featuring 100% responsive layouts, role-based views, tactile controls, and dynamic filter-compliant PDF exports.
 
 ---
 
 ## 🎨 Design Aesthetics & Theme
 
-The user interface is crafted around a custom **Peach Cream & Terracotta** color palette, implementing true Neumorphic depth and Skeuomorphic tactile realism:
+The user interface is built on a custom **Peach Cream & Terracotta** color palette, combining soft neumorphic raised cards, recessed wells, and physical skeuomorphic buttons:
 
-| Palette Role | Color Code | Description & Usage |
-| :--- | :--- | :--- |
-| **60% Dominant Base** | `#FFF8F2` | Soft warm peach white for overall backgrounds, outer shadow highlights, and header decks. |
-| **30% Secondary Surface** | `#FCEFE3` | Warm cream for raised card bodies, recessed wells (`.neu-pressed`), and table rows. |
-| **10% Accent Highlight** | `#E76F51` | Vibrant terracotta orange for primary tactile buttons, active tabs, and badges. |
-| **Supporting Accent** | `#2A9D8F` | Deep emerald green for rooms, laboratories, and conflict-free verification states. |
-| **Typography Base** | `#3D2B1F` | Deep espresso brown for high-contrast, readable typography. |
+### Curated Color Palette
+- **Canvas / Background**: `#FFF8F2` (Soft warm peach cream)
+- **Primary Accent**: `#E76F51` (Rich vibrant terracotta)
+- **Primary Hover / Shadow**: `#C05633` (Deep burnt terracotta)
+- **Secondary Surface**: `#FCEFE3` (Warm cream peach container)
+- **Borders & Insets**: `#D4B8A0` (Subtle warm clay border)
+- **Typography (Headings)**: `#3D2B1F` (Espresso dark brown)
+- **Typography (Muted/Subtext)**: `#7A6559` & `#A0897D` (Medium warm slate)
 
-### Tactile Depth Elements
-- **`.neu-raised` / `.skeuo-card`**: Soft convex shadows combined with subtle top-highlight borders (`#FFFDF9`) simulating physical embossed cards.
-- **`.neu-pressed`**: Inset wells (`box-shadow: inset 3px 3px 6px ...`) giving inputs, trays, and toggle containers a carved, tactile feel.
+### Tactile Neumorphic & Skeuomorphic Primitives
+- **`.neu-raised`**: Dual-directional shadows creating a soft, elevated clay plate appearance.
+- **`.neu-pressed`**: Sunken inner shadows providing tactile input wells, search bars, and toggle switches.
 - **`.skeuo-btn-primary`**: 3D glossy terracotta buttons with bevel highlights, dark bottom lips, and tactile depression on click.
 - **LED Indicators**: Glowing green (`.skeuo-led-green`) and red (`.skeuo-led-red`) lights signifying clean grids or conflict warnings.
 - **Mobile First & Fully Responsive**: Includes a dedicated mobile hamburger toggle menu drawer, adaptive grids (`1 → 2 → 4` columns), swipe guidance banners, and auto-scrolling dialogs.
@@ -120,21 +128,23 @@ The user interface is crafted around a custom **Peach Cream & Terracotta** color
 
 ```mermaid
 graph TD
-    subgraph Client ["Frontend (React 19 + TypeScript + Vite)"]
+    subgraph FrontendApp ["Frontend Service (Vercel / CDN)"]
         UI["Neumorphic UI (Peach Cream & Terracotta)"]
         Nav["Navbar & Mobile Drawer"]
         Views["Dashboard | Student | Teacher | Room | Matrix | Table | Review"]
         ClientExport["Client PDF Export (jsPDF + AutoTable)"]
+        Config["API Client (reads VITE_API_URL)"]
     end
 
-    subgraph Server ["Node.js Express Bridge (server.ts)"]
-        API["REST API Router (:3000)"]
+    subgraph BackendApp ["Backend Service (Render / Railway)"]
+        API["Express REST API (:3000)"]
+        CORS["CORS Middleware"]
         UploadHandler["Multer PDF Storage (/uploads)"]
         ExportHandler["Export Deliverer (/exports)"]
-        ChildProcess["Python Engine Runner (child_process)"]
+        ChildProcess["Python Bridge (child_process)"]
     end
 
-    subgraph Engine ["Python 3 Processing Core (backend/)"]
+    subgraph PythonEngine ["Python Computational Core (backend/)"]
         Orchestrator["engine.py (CLI Orchestrator)"]
         Analyzer["pdf_analyzer.py (PyMuPDF / pdfplumber)"]
         Parser["timetable_parser.py (Grid & Cell Chunker)"]
@@ -144,15 +154,15 @@ graph TD
         DBLayer["db.py (SQLite ORM Layer)"]
     end
 
-    subgraph Storage ["Persistent Storage"]
+    subgraph PersistentStorage ["Storage"]
         SQLiteDB[("timetable.db (SQLite)")]
         PDFStorage["uploads/ (*.pdf)"]
         ExportStorage["exports/ (*.pdf, *.xlsx, *.csv)"]
     end
 
-    Client -->|HTTP Requests| API
-    API -->|Save Files| UploadHandler --> PDFStorage
-    API -->|Execute Commands| ChildProcess --> Orchestrator
+    FrontendApp -->|HTTPS / REST API| CORS --> API
+    API --> UploadHandler --> PDFStorage
+    API --> ChildProcess --> Orchestrator
     Orchestrator --> Analyzer
     Orchestrator --> Parser --> Normalizer
     Orchestrator --> Validator
@@ -163,97 +173,112 @@ graph TD
 
 ---
 
-## 📦 Tech Stack & Dependencies
-
-### Frontend Ecosystem
-| Technology | Version | Purpose |
-| :--- | :--- | :--- |
-| **React** | `^19.0.1` | Core UI component framework |
-| **React DOM** | `^19.0.1` | DOM renderer |
-| **TypeScript** | `^7.0.2` | Type-safe static analysis |
-| **Vite** | `^8.3.0` | Ultra-fast development server & production bundler |
-| **Tailwind CSS** | `^4.3.3` | Utility-first styling framework with CSS variables |
-| **@tailwindcss/vite**| `^4.3.3` | Vite native integration for Tailwind CSS v4 |
-| **Lucide React** | `^0.546.0` | Consistent, modern iconography |
-| **jsPDF** | `^4.2.1` | Client-side vector PDF document creation |
-| **jspdf-autotable**| `^5.0.8` | Formatted multi-page table generator for jsPDF |
-| **xlsx (SheetJS)** | `^0.18.5` | Client-side spreadsheet parsing and generation |
-| **canvas-confetti**| `^1.9.4` | Interactive micro-animations for completed actions |
-
-### Backend & Python Engine
-| Technology | Version | Purpose |
-| :--- | :--- | :--- |
-| **Node.js** | `>=18.0.0` | Server runtime environment |
-| **Express.js** | `^4.21.2` | Web API server & middleware framework |
-| **Multer** | `^2.4.0` | Multipart form-data parser for PDF file uploads |
-| **tsx** | `^4.21.0` | Direct execution of TypeScript server files |
-| **esbuild** | `^0.28.0` | High-speed production bundling of `server.ts` |
-| **Python** | `>=3.9` | Primary computational and extraction runtime |
-| **PyMuPDF (fitz)** | `>=1.23.0` | High-speed PDF layout and vector text inspection |
-| **pdfplumber** | `>=0.10.0` | Table boundary recognition and coordinate parsing |
-| **pandas** | `>=1.5.0` | Tabular data manipulation, grouping, and indexing |
-| **numpy** | `>=1.24.0` | Array-based vector analysis and matrix sorting |
-| **openpyxl** | `>=3.0.0` | Excel (.xlsx) workbook generation with custom formatting |
-| **ReportLab** | `>=4.0.0` | Professional PDF generation engine |
-| **SQLite3** | Built-in | Relational database storage (`timetable.db`) |
-
----
-
 ## 📁 Project Directory Structure
+
+The project is strictly organized into two independent, self-contained directories:
 
 ```text
 TimeTableAnalyzer/
-├── backend/
-│   ├── data/                   # Temporary data exchange files
+│
+├── frontend/                       # 🌐 CLIENT APPLICATION (Vercel)
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── AdminDataTable.tsx          # CRUD database records explorer
+│   │   │   ├── DashboardStats.tsx          # 8 KPI cards & load distribution
+│   │   │   ├── EditRecordModal.tsx         # Add/Edit record dialog
+│   │   │   ├── ExtractionReviewView.tsx    # Conflict diagnostics
+│   │   │   ├── Navbar.tsx                  # Tactile navigation & mobile drawer
+│   │   │   ├── PdfViewerModal.tsx          # Vector PDF viewer
+│   │   │   ├── RoomScheduleView.tsx        # Venue occupancy & lab tracker
+│   │   │   ├── StudentScheduleView.tsx     # Student cascading schedule view
+│   │   │   ├── TeacherScheduleView.tsx     # Faculty workload analysis
+│   │   │   ├── UploadModal.tsx             # PDF upload & parsing modal
+│   │   │   └── WeeklyMatrixView.tsx        # 2D Day × Time matrix
+│   │   ├── lib/
+│   │   │   └── pdfExport.ts                # Client-side jsPDF + AutoTable export
+│   │   ├── App.tsx                         # Main app controller
+│   │   ├── config.ts                       # API URL configuration (VITE_API_URL)
+│   │   ├── index.css                       # Design tokens, Neumorphic utilities
+│   │   ├── main.tsx                        # React DOM root mount
+│   │   └── types.ts                        # TypeScript interfaces & types
+│   ├── index.html                          # HTML template
+│   ├── package.json                        # Frontend dependencies & scripts
+│   ├── tsconfig.json                       # Frontend TypeScript config
+│   ├── vercel.json                         # Vercel SPA routing & cache config
+│   ├── vite.config.ts                      # Vite build & local dev proxy setup
+│   └── .env.example                        # Frontend env variables reference
+│
+├── backend/                        # ⚙️ SERVER & PYTHON ENGINE (Render/Railway)
+│   ├── data/                               # Database storage directory
 │   ├── database/
-│   │   └── db.py               # SQLite schema setup, CRUD queries, version management
+│   │   └── db.py                           # SQLite schema, queries, versioning
 │   ├── services/
-│   │   ├── exporter.py         # ReportLab PDF, openpyxl Excel, and CSV export services
-│   │   ├── normalizer.py       # Time formatting, room sanitization, text normalizers
-│   │   ├── pdf_analyzer.py     # PDF metadata, coordinate extraction, page analysis
-│   │   ├── table_extractor.py  # pdfplumber table extraction utilities
-│   │   ├── timetable_parser.py # Cell chunking, canonical mapping, day/time association
-│   │   └── validator.py        # Pandas/NumPy conflict detection & confidence scoring
-│   ├── engine.py               # Python CLI command orchestrator
-│   ├── requirements.txt        # Python pip dependencies
-│   └── timetable.db            # Primary SQLite database file
-├── exports/                    # Generated output files (PDF, XLSX, CSV)
-├── uploads/                    # Stored user-uploaded PDF timetable files
-├── src/
-│   ├── components/
-│   │   ├── AdminDataTable.tsx      # Paginated database records explorer with CRUD
-│   │   ├── DashboardStats.tsx      # 8 KPI cards & weekly load balance chart
-│   │   ├── EditRecordModal.tsx     # Add / Edit class record modal dialog
-│   │   ├── ExtractionReviewView.tsx# Conflict audit, overlap diagnostics & review
-│   │   ├── Navbar.tsx              # Tactile header, role switcher & mobile toggle drawer
-│   │   ├── PdfViewerModal.tsx      # Vector PDF reader with page switcher
-│   │   ├── RoomScheduleView.tsx    # Venue schedule & laboratory occupancy
-│   │   ├── StudentScheduleView.tsx # Cascading student timetable finder & cards
-│   │   ├── TeacherScheduleView.tsx # Faculty schedule, search & workload analysis
-│   │   ├── UploadModal.tsx         # Drag & drop upload modal with parsing steps
-│   │   └── WeeklyMatrixView.tsx    # 2D weekly matrix ledger & cell modal
-│   ├── lib/
-│   │   └── pdfExport.ts        # Client-side jsPDF + AutoTable export engine
-│   ├── App.tsx                 # Root application controller, routing & search state
-│   ├── index.css               # Neumorphic/Skeuomorphic design system & Tailwind setup
-│   ├── main.tsx                # React root mount entry point
-│   └── types.ts                # TypeScript data interfaces and contracts
-├── dist/                       # Production build output
-├── package.json                # Node dependencies, build scripts, project metadata
-├── server.ts                   # Express server, Vite middleware & Python bridge
-├── tsconfig.json               # TypeScript compiler configuration
-├── vite.config.ts              # Vite configuration with React and Tailwind plugins
-└── README.md                   # Comprehensive project documentation
+│   │   ├── exporter.py                     # ReportLab PDF, openpyxl Excel, CSV
+│   │   ├── normalizer.py                   # Time formatting, text sanitation
+│   │   ├── pdf_analyzer.py                 # PyMuPDF coordinate inspection
+│   │   ├── table_extractor.py              # pdfplumber grid extraction
+│   │   ├── timetable_parser.py             # Cell chunking & canonical mapping
+│   │   └── validator.py                    # Pandas/NumPy conflict detection
+│   ├── uploads/                            # Stored user PDF files
+│   ├── exports/                            # Generated export files
+│   ├── engine.py                           # Python CLI command orchestrator
+│   ├── package.json                        # Backend Node.js dependencies
+│   ├── requirements.txt                    # Python pip dependencies
+│   ├── server.ts                           # Express API server with CORS
+│   ├── tsconfig.json                       # Backend TypeScript config
+│   ├── Dockerfile                          # Multi-stage production container
+│   ├── render.yaml                         # Render.com deployment blueprint
+│   ├── .dockerignore                       # Docker build exclusions
+│   ├── .gitignore                          # Backend gitignore
+│   └── .env.example                        # Backend env variables reference
+│
+├── .gitignore                      # Root Git ignore rules
+└── README.md                       # Comprehensive documentation
 ```
+
+---
+
+## 📦 Tech Stack & Dependencies
+
+### Frontend Service (`frontend/`)
+| Technology | Version | Purpose |
+| :--- | :--- | :--- |
+| **React** | `^19.0.1` | Modern declarative UI component library |
+| **TypeScript** | `^7.0.2` | Static type checking and interfaces |
+| **Vite** | `^8.3.0` | Ultra-fast build tool & dev proxy |
+| **Tailwind CSS** | `^4.3.3` | Utility styling with CSS variable support |
+| **Lucide React** | `^0.546.0` | Consistent UI icon set |
+| **jsPDF** | `^4.2.1` | Client-side vector PDF generation |
+| **jspdf-autotable**| `^5.0.8` | Formatted multi-page data tables in PDFs |
+| **xlsx (SheetJS)** | `^0.18.5` | Client-side spreadsheet export |
+| **canvas-confetti**| `^1.9.4` | Micro-animation celebration triggers |
+
+### Backend Service (`backend/`)
+| Technology | Version | Purpose |
+| :--- | :--- | :--- |
+| **Node.js** | `>=20.0.0` | Server runtime environment |
+| **Express.js** | `^4.21.2` | REST API routing and middleware |
+| **CORS** | `^2.8.5` | Cross-Origin Resource Sharing handling |
+| **Multer** | `^2.4.0` | Multipart/form-data PDF file uploads |
+| **esbuild** | `^0.28.0` | High-speed server bundling |
+| **Python** | `>=3.11` | Extraction engine & mathematical operations |
+| **PyMuPDF (fitz)** | `>=1.23.0` | High-speed PDF layout & coordinate analysis |
+| **pdfplumber** | `>=0.10.0` | Visual table boundary detection |
+| **pandas** | `>=1.5.0` | Tabular data grouping and conflict analysis |
+| **numpy** | `>=1.24.0` | Vector operations and matrix sorting |
+| **openpyxl** | `>=3.0.0` | Formatted Excel workbook exports |
+| **ReportLab** | `>=4.0.0` | Vector PDF document generation |
+| **SQLite3** | Built-in | Relational database storage |
 
 ---
 
 ## 🔌 REST API Reference
 
-The backend exposes a full suite of REST endpoints over port `3000`:
+The backend exposes a full suite of REST endpoints:
 
 | Method | Endpoint | Description | Query / Body Parameters |
 | :--- | :--- | :--- | :--- |
+| `GET` | `/api/health` | Service health status & python binary info | None |
 | `POST` | `/api/upload` | Uploads PDF to server storage | Multipart `pdf` file |
 | `POST` | `/api/analyze` | Executes Python extraction pipeline | `{ filename, originalName }` |
 | `POST` | `/api/upload-and-analyze` | Ingests, parses, and saves PDF in 1 step | Multipart `pdf` file |
@@ -275,101 +300,137 @@ The backend exposes a full suite of REST endpoints over port `3000`:
 
 ---
 
-## 🛠 Installation & Setup Guide
+## 🛠 Local Development Setup
 
 ### Prerequisites
-Make sure the following tools are installed on your machine:
-- **Node.js**: `v18.0.0` or higher ([Download Node.js](https://nodejs.org/))
-- **Python**: `v3.9` or higher ([Download Python](https://www.python.org/))
-- **Package Managers**: `npm` (bundled with Node) and `pip` (bundled with Python)
+- **Node.js**: `v18.0.0` or higher
+- **Python**: `v3.10` or higher with `pip`
 
 ---
 
-### 1. Clone Repository
-```bash
-git clone https://github.com/aliikram12/TimeTableAnalyzer.git
-cd TimeTableAnalyzer
-```
+### 1. Backend Setup
 
----
+Open a terminal window:
 
-### 2. Install Node.js Dependencies
-Install the required frontend and server packages:
 ```bash
+cd backend
+
+# Install Node.js dependencies
 npm install
-```
 
----
+# Install Python dependencies
+pip install -r requirements.txt
 
-### 3. Install Python Dependencies
-Install the Python extraction, data processing, and document generation packages:
-```bash
-pip install -r backend/requirements.txt
-```
-
-> **Note for Windows Users**: Ensure `python` is added to your system `PATH`. The server automatically invokes `python` on Windows and `python3` on Linux/macOS.
-
----
-
-### 4. Run in Development Mode
-Start the development server (runs Express and Vite HMR concurrently):
-```bash
+# Start backend server (runs on port 3000)
 npm run dev
 ```
 
-Open your browser and navigate to:
-```text
-http://localhost:3000
-```
+The backend starts at `http://localhost:3000`. You can verify health at `http://localhost:3000/api/health`.
 
 ---
 
-### 5. Production Build & Execution
-To compile the TypeScript client into optimized static assets and bundle `server.ts`:
+### 2. Frontend Setup
+
+Open a **second** terminal window:
+
 ```bash
-npm run build
-npm start
+cd frontend
+
+# Install frontend dependencies
+npm install
+
+# Start frontend development server (runs on port 5173)
+npm run dev
 ```
+
+Open your browser at `http://localhost:5173`.
+During local development, Vite automatically proxies all `/api/*` calls from port `5173` to `http://localhost:3000`.
 
 ---
 
-## 🔄 Core Workflows
+## 🚀 Production Deployment Guide
+
+### Deploying Frontend on Vercel
+
+1. Push your repository to GitHub.
+2. Log in to [Vercel](https://vercel.com/) and click **Add New Project**.
+3. Select your repository: `TimeTableAnalyzer`.
+4. Under **Project Settings**:
+   - **Root Directory**: Select `frontend` (Click *Edit* and choose the `frontend` folder).
+   - **Framework Preset**: Vite (detected automatically).
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+5. Under **Environment Variables**, add:
+   - `VITE_API_URL`: `https://your-backend.onrender.com` *(your deployed backend URL)*
+6. Click **Deploy**.
+
+> **Note**: `frontend/vercel.json` is already configured with SPA rewrites so client-side routing works flawlessly.
+
+---
+
+### Deploying Backend on Render
+
+The backend requires Node.js, Python, and system packages, which are fully containerized via `backend/Dockerfile`.
+
+1. Log in to [Render](https://render.com/).
+2. Click **New +** ➔ **Web Service**.
+3. Connect your GitHub repository: `TimeTableAnalyzer`.
+4. Configure the service settings:
+   - **Root Directory**: `backend`
+   - **Environment**: `Docker`
+   - **Dockerfile Path**: `Dockerfile`
+   - **Region**: Choose the region closest to your users.
+   - **Instance Type**: Free or Starter.
+5. Under **Environment Variables**, add:
+   - `PORT`: `3000`
+   - `CORS_ORIGIN`: `*` *(or your Vercel URL, e.g. `https://your-app.vercel.app`)*
+   - `NODE_ENV`: `production`
+   - `PYTHON_BIN`: `python3`
+6. Click **Create Web Service**.
+
+> Render will build the container, install both Python requirements and Node modules, and expose the API over HTTPS. Once deployed, copy your Render service URL and add it as `VITE_API_URL` in Vercel!
+
+---
+
+### Deploying Backend on Railway
+
+1. Log in to [Railway](https://railway.app/).
+2. Click **New Project** ➔ **Deploy from GitHub repo**.
+3. Select `TimeTableAnalyzer`.
+4. In **Settings** ➔ **Root Directory**, set: `/backend`.
+5. Railway will automatically detect `backend/Dockerfile`.
+6. Add environment variable:
+   - `CORS_ORIGIN`: `*`
+7. Click **Deploy**.
+8. In the **Networking** section, click **Generate Domain** to get your public API URL.
+
+---
+
+## 🔬 Core Workflows
 
 ### PDF Parsing Pipeline
-1. **Upload**: The user uploads a university timetable PDF via the tactile drag-and-drop modal.
-2. **Inspection**: `PDFAnalyzer` examines total page count, font metrics, and bounding box coordinates using PyMuPDF.
-3. **Canonical Discovery**: Scans initial index pages for unclipped degree titles (e.g. `BS Computer Science`, `BS Artificial Intelligence`) and instructors.
-4. **Table Reconstruction**: `pdfplumber` extracts table cell bounding boxes. Cells with multiple lectures in one time block are split into distinct records.
-5. **Normalization**: `normalizer.py` cleans whitespace, sanitizes times (e.g. `09:00 - 10:30`), and assigns department codes.
-6. **Persistence**: Saves normalized entries, metadata, and generated analytics to `timetable.db` in SQLite.
+1. **Coordinate Analysis**: `pdf_analyzer.py` inspects page dimensions, tables, and bounding boxes using `PyMuPDF` and `pdfplumber`.
+2. **Canonical Mapping**: The engine examines header blocks and index tables to construct a canonical dictionary of degree programs, batches, and shifts.
+3. **Multi-Lecture Chunking**: When multiple classes share a cell or time slot, `timetable_parser.py` isolates individual blocks using regex and text layout markers.
+4. **Data Normalization**: `normalizer.py` sanitizes time spans (e.g. `08:30-10:00`), maps faculty initials to full names, and extracts room identifiers.
+5. **Database Storage**: The parsed dataset is committed atomically to SQLite with version tracking.
 
 ### Conflict & Anomaly Detection
-The validator (`validator.py`) utilizes Pandas DataFrame cross-tabulations to detect:
-- **Teacher Double-Booking**: Any teacher assigned to more than one lecture at the exact same day and time interval.
-- **Room Double-Booking**: Any room or lab scheduled for more than one class simultaneously.
-- **Confidence Auditing**: Identifies incomplete fields (e.g. missing room, unassigned instructor) and flags them for manual admin review.
+- **Teacher Double-Booking**: Evaluates whether an instructor has overlapping time allocations on the same day.
+- **Room Collisions**: Identifies if two distinct classes occupy the same room at overlapping hours.
+- **Confidence Scoring**: Flags anomalous entries (e.g. missing room or ambiguous subject) for administrative review.
 
 ### Multi-Format Filter-Aware Exports
-When exporting to PDF, Excel, or CSV:
-- **Search and Filter Awareness**: If you have searched for a teacher (`"Dr. Asif"`) or filtered by a specific degree program (`"BS SE"`), the export engine respects these active filters.
-- **Visual Design**: Exported PDFs contain dual-line skeuomorphic framing, terracotta header accents, clean tabular data, and academic metadata stamps.
-
-### Timetable Version Management
-- Manage multiple semester timetables (e.g., Fall 2025, Spring 2026).
-- Use the **Timetable Version Manager** in the navbar to switch between datasets or delete older versions with instant SQLite cascades.
+- When filters are active (e.g. searching for a teacher or course), exports reflect **only the filtered dataset**.
+- Client-side PDF generation provides instant, crisp vector documents formatted with official header ledger strips.
 
 ---
 
-## 📄 License & Credits
+## 📜 License & Credits
 
-Developed with ❤️ as a modern academic scheduling and document intelligence solution.
-
-- **Author**: Ali Ikram ([@aliikram12](https://github.com/aliikram12))
-- **Design System**: Peach Cream & Terracotta Neumorphic Architecture
-- **Engine**: Python PyMuPDF + Pandas Grid Coordinate Parser
-
----
-
-<div align="center">
-  <sub>Built with React 19, Vite, Tailwind CSS v4, Express, Python 3, PyMuPDF, ReportLab, and SQLite.</sub>
-</div>
+Developed with precision for academic institutions. Built using open-source libraries:
+- [PyMuPDF](https://github.com/pymupdf/PyMuPDF)
+- [pdfplumber](https://github.com/jsvine/pdfplumber)
+- [React](https://react.dev/) & [Vite](https://vitejs.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [ReportLab](https://www.reportlab.com/) & [jsPDF](https://github.com/parallax/jsPDF)

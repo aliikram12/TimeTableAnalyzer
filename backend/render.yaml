@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: timetable-analyzer-backend
+    env: docker
+    dockerfilePath: Dockerfile
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: CORS_ORIGIN
+        value: "*"
+      - key: NODE_ENV
+        value: production
+      - key: PYTHON_BIN
+        value: python3

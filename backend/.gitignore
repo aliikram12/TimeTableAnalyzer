@@ -1,0 +1,10 @@
+node_modules/
+dist/
+uploads/*
+!uploads/.gitkeep
+exports/*
+!exports/.gitkeep
+__pycache__/
+*.py[cod]
+.env
+*.log

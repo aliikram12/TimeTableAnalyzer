@@ -1,8 +1,37 @@
+# Dependencies
 node_modules/
-build/
+frontend/node_modules/
+backend/node_modules/
+
+# Production build outputs
 dist/
-coverage/
+build/
+frontend/dist/
+backend/dist/
+
+# Environment files
+.env
+.env.*
+!.env.example
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Uploads and exports (preserve directories via .gitkeep)
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/exports/*
+!backend/exports/.gitkeep
+
+# System & logs
 .DS_Store
 *.log
-.env*
-!.env.example
+coverage/

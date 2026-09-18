@@ -1,6 +1,0 @@
-{
-  "name": "Smart Timetable Analyzer",
-  "description": "Upload, analyze, and smartly filter university timetable PDFs to instantly find student, teacher, and room schedules.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
