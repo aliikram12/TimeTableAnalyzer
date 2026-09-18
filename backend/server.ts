@@ -12,32 +12,45 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 
 // Robust directory locator that finds the backend root containing engine.py
-// whether running in development (tsx server.ts) or production (node dist/server.js)
+// Handles: development (tsx server.ts), production (node dist/server.js), 
+// Vercel serverless (/var/task/), Docker containers, and api/ subdirectory imports
 function getBackendDir(): string {
   if (process.env.BACKEND_ROOT && fs.existsSync(path.join(process.env.BACKEND_ROOT, "engine.py"))) {
     return process.env.BACKEND_ROOT;
   }
-  const currentDir = path.dirname(__filename);
-  if (fs.existsSync(path.join(currentDir, "engine.py"))) {
-    return currentDir;
+  
+  // Check multiple candidate directories
+  const candidates = [
+    path.dirname(__filename),                    // Same dir as this file (tsx server.ts)
+    path.dirname(path.dirname(__filename)),       // Parent dir (node dist/server.js or api/index.ts)
+    process.cwd(),                               // Current working directory
+    path.join(process.cwd(), ".."),               // Parent of cwd
+    "/var/task",                                  // Vercel serverless root
+  ];
+
+  for (const dir of candidates) {
+    try {
+      if (fs.existsSync(path.join(dir, "engine.py"))) {
+        return dir;
+      }
+    } catch { /* ignore permission errors */ }
   }
-  const parentDir = path.dirname(currentDir);
-  if (fs.existsSync(path.join(parentDir, "engine.py"))) {
-    return parentDir;
-  }
+
   return process.cwd();
 }
 
 const BACKEND_DIR = getBackendDir();
+const IS_VERCEL = process.env.VERCEL === "1";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const PYTHON_BIN = process.env.PYTHON_BIN || (process.platform === "win32" ? "python" : "python3");
 
-// Directory configuration anchored to BACKEND_DIR
-const UPLOADS_DIR = process.env.UPLOADS_DIR || path.join(BACKEND_DIR, "uploads");
-const EXPORTS_DIR = process.env.EXPORTS_DIR || path.join(BACKEND_DIR, "exports");
-const DATA_DIR = process.env.DATA_DIR || path.join(BACKEND_DIR, "data");
+// On Vercel, use /tmp for writable storage (serverless has ephemeral filesystem)
+// Locally/Docker, use BACKEND_DIR subdirectories
+const UPLOADS_DIR = process.env.UPLOADS_DIR || (IS_VERCEL ? "/tmp/uploads" : path.join(BACKEND_DIR, "uploads"));
+const EXPORTS_DIR = process.env.EXPORTS_DIR || (IS_VERCEL ? "/tmp/exports" : path.join(BACKEND_DIR, "exports"));
+const DATA_DIR = process.env.DATA_DIR || (IS_VERCEL ? "/tmp/data" : path.join(BACKEND_DIR, "data"));
 
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 if (!fs.existsSync(EXPORTS_DIR)) fs.mkdirSync(EXPORTS_DIR, { recursive: true });
@@ -623,9 +636,15 @@ app.get("/api/export/pdf", async (req, res) => {
 });
 
 // -------------------------------------------------------------
-// START SERVER
+// START SERVER (only when running directly, not imported by Vercel)
 // -------------------------------------------------------------
-app.listen(PORT, () => {
-  console.log(`Timetable Analyzer Backend listening on port ${PORT}`);
-  console.log(`Allowed CORS origins: ${allowedOrigins.join(", ")}`);
-});
+if (process.env.VERCEL !== "1") {
+  app.listen(PORT, () => {
+    console.log(`Timetable Analyzer Backend listening on port ${PORT}`);
+    console.log(`Backend root: ${BACKEND_DIR}`);
+    console.log(`Allowed CORS origins: ${allowedOrigins.join(", ")}`);
+  });
+}
+
+// Export for Vercel Serverless Functions
+export default app;
