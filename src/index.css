@@ -1,0 +1,290 @@
+@import "tailwindcss";
+
+:root {
+  /* ═══════════════════════════════════════════════════════════════
+     PEACH CREAM & TERRACOTTA NEUMORPHIC DESIGN SYSTEM
+     60% Base #FFF8F2 | 30% Secondary #FCEFE3 | 10% Accent #E76F51
+     ═══════════════════════════════════════════════════════════════ */
+  --neu-bg: #FFF8F2;
+  --neu-surface: #FFF8F2;
+  --neu-surface-light: #FFFDF9;
+  --neu-surface-dark: #FCEFE3;
+  --neu-shadow-light: rgba(255, 255, 255, 0.85);
+  --neu-shadow-dark: rgba(200, 170, 145, 0.4);
+  --neu-shadow-inset-light: rgba(255, 255, 255, 0.8);
+  --neu-shadow-inset-dark: rgba(200, 170, 145, 0.45);
+  --accent: #E76F51;
+  --accent-light: #F4A261;
+  --accent-dark: #C05633;
+  --text-primary: #3D2B1F;
+  --text-secondary: #7A6559;
+  --text-muted: #A0897D;
+  --border-light: rgba(255, 255, 255, 0.9);
+  --border-subtle: rgba(200, 170, 145, 0.35);
+}
+
+body {
+  background-color: var(--neu-bg);
+  color: var(--text-primary);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbar — Warm Peach Tones */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F5E6D8;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: #C8AA91;
+  border-radius: 4px;
+  border: 2px solid #F5E6D8;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B08968;
+}
+
+/* -------------------------------------------------------------
+   NEUMORPHIC ELEVATIONS & SURFACES — Peach Cream Base
+   ------------------------------------------------------------- */
+.neu-flat {
+  background-color: var(--neu-surface);
+}
+
+.neu-raised {
+  background: linear-gradient(145deg, #FFFDF9, #F8E8D8);
+  box-shadow: 7px 7px 15px var(--neu-shadow-dark), -7px -7px 15px var(--neu-shadow-light);
+  border: 1px solid var(--border-light);
+  border-radius: 1rem;
+}
+
+.neu-raised-sm {
+  background: linear-gradient(145deg, #FFFDF9, #F8E8D8);
+  box-shadow: 4px 4px 9px var(--neu-shadow-dark), -4px -4px 9px var(--neu-shadow-light);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 0.75rem;
+}
+
+.neu-raised-lg {
+  background: linear-gradient(145deg, #FFFEF9, #F5E2D0);
+  box-shadow: 12px 12px 24px var(--neu-shadow-dark), -12px -12px 24px var(--neu-shadow-light);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 1.25rem;
+}
+
+.neu-pressed {
+  background: #FCEFE3;
+  box-shadow: inset 3px 3px 6px var(--neu-shadow-inset-dark), inset -3px -3px 6px var(--neu-shadow-inset-light);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.75rem;
+}
+
+.neu-pressed-sm {
+  background: #FCEFE3;
+  box-shadow: inset 2px 2px 4px var(--neu-shadow-inset-dark), inset -2px -2px 4px var(--neu-shadow-inset-light);
+  border: 1px solid rgba(200, 170, 145, 0.3);
+  border-radius: 0.5rem;
+}
+
+/* -------------------------------------------------------------
+   SKEUOMORPHIC 3D TACTILE BUTTONS & BADGES — Terracotta Accent
+   ------------------------------------------------------------- */
+.skeuo-card {
+  background: linear-gradient(145deg, #FFFBF5, #F5E2D0);
+  box-shadow: 8px 8px 18px var(--neu-shadow-dark), -8px -8px 18px var(--neu-shadow-light);
+  border-top: 1px solid rgba(255, 255, 255, 0.95);
+  border-left: 1px solid rgba(255, 255, 255, 0.8);
+  border-right: 1px solid var(--border-subtle);
+  border-bottom: 1px solid rgba(200, 170, 145, 0.45);
+  border-radius: 1rem;
+}
+
+/* Glossy Terracotta 3D Primary Button */
+.skeuo-btn-primary {
+  background: linear-gradient(180deg, #E76F51 0%, #C05633 100%);
+  color: #ffffff;
+  font-weight: 600;
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+  border-bottom: 2px solid #8B3A20;
+  box-shadow: 0 4px 10px rgba(231, 111, 81, 0.4), 0 1px 2px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.skeuo-btn-primary:hover {
+  background: linear-gradient(180deg, #F4845F 0%, #E76F51 100%);
+  box-shadow: 0 6px 14px rgba(231, 111, 81, 0.5);
+  transform: translateY(-1px);
+}
+.skeuo-btn-primary:active {
+  background: linear-gradient(180deg, #C05633 0%, #8B3A20 100%);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+  transform: translateY(1px);
+}
+
+/* Glossy Ruby Danger Button (Delete actions) */
+.skeuo-btn-danger {
+  background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%);
+  color: #ffffff;
+  font-weight: 600;
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
+  border-bottom: 2px solid #7f1d1d;
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.35);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  transition: all 0.15s ease;
+}
+.skeuo-btn-danger:hover {
+  background: linear-gradient(180deg, #f87171 0%, #dc2626 100%);
+  box-shadow: 0 6px 14px rgba(239, 68, 68, 0.45);
+  transform: translateY(-1px);
+}
+.skeuo-btn-danger:active {
+  background: linear-gradient(180deg, #b91c1c 0%, #991b1b 100%);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+  transform: translateY(1px);
+}
+
+/* Glossy Warm Emerald Success Button */
+.skeuo-btn-emerald {
+  background: linear-gradient(180deg, #10b981 0%, #047857 100%);
+  color: #ffffff;
+  font-weight: 600;
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
+  border-bottom: 2px solid #064e3b;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.35);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  transition: all 0.15s ease;
+}
+.skeuo-btn-emerald:hover {
+  background: linear-gradient(180deg, #34d399 0%, #059669 100%);
+  box-shadow: 0 6px 14px rgba(16, 185, 129, 0.45);
+  transform: translateY(-1px);
+}
+.skeuo-btn-emerald:active {
+  background: linear-gradient(180deg, #047857 0%, #065f46 100%);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35);
+  transform: translateY(1px);
+}
+
+/* Tactile Surface / Neutral Button — Warm Peach */
+.skeuo-btn-surface {
+  background: linear-gradient(180deg, #FFFDF9 0%, #F5E2D0 100%);
+  color: var(--text-primary);
+  border-top: 1px solid rgba(255, 255, 255, 0.9);
+  border-bottom: 1.5px solid #D4B8A0;
+  border-left: 1px solid #F5E6D8;
+  border-right: 1px solid #D4B8A0;
+  box-shadow: 3px 3px 6px var(--neu-shadow-dark), -3px -3px 6px var(--neu-shadow-light);
+  transition: all 0.15s ease;
+}
+.skeuo-btn-surface:hover {
+  background: linear-gradient(180deg, #FFFDF9 0%, #FAF0E6 100%);
+  box-shadow: 4px 4px 9px var(--neu-shadow-dark), -4px -4px 9px var(--neu-shadow-light);
+}
+.skeuo-btn-surface:active {
+  background: #F5E2D0;
+  box-shadow: inset 2px 2px 4px var(--neu-shadow-inset-dark), inset -2px -2px 4px var(--neu-shadow-inset-light);
+  transform: translateY(1px);
+}
+
+/* Skeuomorphic Warm Badge */
+.skeuo-badge {
+  background: linear-gradient(180deg, #FFFDF9 0%, #F5E6D8 100%);
+  border: 1px solid #D4B8A0;
+  border-top-color: #FFFDF9;
+  box-shadow: 0 1px 3px rgba(139, 90, 43, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border-radius: 9999px;
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------
+   HARDWARE STATUS INDICATOR LEDS
+   ------------------------------------------------------------- */
+.skeuo-led-green {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 35%, #86efac, #22c55e 60%, #15803d);
+  box-shadow: 0 0 8px #22c55e, inset 0 1px 1px #ffffff, 0 0 0 1.5px #D4B8A0;
+  display: inline-block;
+}
+
+.skeuo-led-red {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 35%, #fca5a5, #ef4444 60%, #991b1b);
+  box-shadow: 0 0 8px #ef4444, inset 0 1px 1px #ffffff, 0 0 0 1.5px #D4B8A0;
+  display: inline-block;
+}
+
+.skeuo-led-amber {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 35%, #fde047, #f59e0b 60%, #b45309);
+  box-shadow: 0 0 8px #f59e0b, inset 0 1px 1px #ffffff, 0 0 0 1.5px #D4B8A0;
+  display: inline-block;
+}
+
+/* Terracotta Accent LED */
+.skeuo-led-terracotta {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 35%, #F4A261, #E76F51 60%, #C05633);
+  box-shadow: 0 0 8px #E76F51, inset 0 1px 1px #ffffff, 0 0 0 1.5px #D4B8A0;
+  display: inline-block;
+}
+
+/* -------------------------------------------------------------
+   INPUTS & SELECTS (RECESSED WELLS) — Warm Peach
+   ------------------------------------------------------------- */
+.neu-input {
+  background: #FCEFE3;
+  box-shadow: inset 3px 3px 6px var(--neu-shadow-inset-dark), inset -3px -3px 6px var(--neu-shadow-inset-light);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.75rem;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+.neu-input:focus {
+  outline: none;
+  border-color: #E76F51;
+  box-shadow: inset 3px 3px 6px var(--neu-shadow-inset-dark), inset -3px -3px 6px var(--neu-shadow-inset-light), 0 0 0 2px rgba(231, 111, 81, 0.25);
+}
+
+.neu-select {
+  background: #FCEFE3;
+  box-shadow: inset 3px 3px 6px var(--neu-shadow-inset-dark), inset -3px -3px 6px var(--neu-shadow-inset-light);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.75rem;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+.neu-select:focus {
+  outline: none;
+  border-color: #E76F51;
+  box-shadow: inset 3px 3px 6px var(--neu-shadow-inset-dark), inset -3px -3px 6px var(--neu-shadow-inset-light), 0 0 0 2px rgba(231, 111, 81, 0.25);
+}
+
+/* -------------------------------------------------------------
+   MICRO ANIMATIONS — Subtle Warmth
+   ------------------------------------------------------------- */
+@keyframes neu-pulse {
+  0%, 100% { box-shadow: 7px 7px 15px var(--neu-shadow-dark), -7px -7px 15px var(--neu-shadow-light); }
+  50% { box-shadow: 5px 5px 12px var(--neu-shadow-dark), -5px -5px 12px var(--neu-shadow-light); }
+}
+
+@keyframes terracotta-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(231, 111, 81, 0.3); }
+  50% { box-shadow: 0 0 16px rgba(231, 111, 81, 0.5); }
+}
+
+.animate-terracotta-glow {
+  animation: terracotta-glow 2s ease-in-out infinite;
+}
