@@ -2,24 +2,32 @@
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-2.1.0-E76F51?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-3.0.0-E76F51?style=for-the-badge)
 ![React](https://img.shields.io/badge/React-19.0.1-61DAFB?style=for-the-badge&logo=react&logoColor=black)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-7.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-8.x-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-Python-009688?style=for-the-badge&logo=fastapi&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 ![PyMuPDF](https://img.shields.io/badge/PyMuPDF-fitz-FF6F00?style=for-the-badge)
 ![ReportLab](https://img.shields.io/badge/ReportLab-PDF_Engine-C05633?style=for-the-badge)
-![Deployment](https://img.shields.io/badge/Deployment-Vercel_%2B_Render-000000?style=for-the-badge&logo=vercel&logoColor=white)
+![Deployment](https://img.shields.io/badge/Deployment-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 
 <p align="center">
   <strong>An Intelligent University Timetable Extraction, Schedule Management, and Conflict Analysis Engine</strong>
   <br />
   Featuring a <em>Peach Cream & Terracotta</em> Neumorphic & Skeuomorphic tactile design system with 100% mobile responsiveness.
   <br />
-  <strong>Architected with decoupled, standalone <code>frontend/</code> and <code>backend/</code> services ready for independent production deployment.</strong>
+  <strong>Architected with decoupled, standalone <code>frontend/</code> and <code>backend/</code> services — both deployed independently on Vercel.</strong>
+</p>
+
+<p align="center">
+  🌐 <strong>Live Demo:</strong>
+  &nbsp;
+  <a href="https://uostimetableanalyzer.vercel.app/" target="_blank"><strong>Frontend →</strong></a>
+  &nbsp;|&nbsp;
+  <a href="https://uostimetableanalyzerapi.vercel.app/" target="_blank"><strong>Backend API →</strong></a>
 </p>
 
 </div>
@@ -29,27 +37,16 @@
 ## 📑 Table of Contents
 
 - [Overview](#-overview)
+- [Live Deployments](#-live-deployments)
 - [Design Aesthetics & Theme](#-design-aesthetics--theme)
 - [Key Features](#-key-features)
 - [System Architecture](#-system-architecture)
 - [Project Directory Structure](#-project-directory-structure)
 - [Tech Stack & Dependencies](#-tech-stack--dependencies)
-  - [Frontend Service (`frontend/`)](#frontend-service-frontend)
-  - [Backend Service (`backend/`)](#backend-service-backend)
 - [REST API Reference](#-rest-api-reference)
 - [Local Development Setup](#-local-development-setup)
-  - [Prerequisites](#prerequisites)
-  - [1. Backend Setup](#1-backend-setup)
-  - [2. Frontend Setup](#2-frontend-setup)
 - [Production Deployment Guide](#-production-deployment-guide)
-  - [Deploying Frontend on Vercel](#deploying-frontend-on-vercel)
-  - [Deploying Backend on Render](#deploying-backend-on-render)
-  - [Deploying Backend on Railway](#deploying-backend-on-railway)
 - [Core Workflows](#-core-workflows)
-  - [PDF Parsing Pipeline](#pdf-parsing-pipeline)
-  - [Conflict & Anomaly Detection](#conflict--anomaly-detection)
-  - [Multi-Format Filter-Aware Exports](#multi-format-filter-aware-exports)
-  - [Timetable Version Management](#timetable-version-management)
 - [License & Credits](#-license--credits)
 
 ---
@@ -63,9 +60,20 @@ Academic timetables published by universities are almost universally distributed
 - **Poor mobile experience**: Viewing large matrix tables on phones requires continuous pinching and zooming.
 
 **Smart Timetable Analyzer** solves this through a decoupled, high-performance architecture:
-1. An intelligent Python parsing engine extracting coordinate-anchored lecture cells and resolving canonical degrees, sections, and shifts.
-2. An Express.js REST API providing fast filtering, conflict auditing, and export delivery.
-3. A React 19 single-page application crafted with a custom **Peach Cream & Terracotta** skeuomorphic design system featuring 100% responsive layouts, role-based views, tactile controls, and dynamic filter-compliant PDF exports.
+1. An intelligent **Python FastAPI backend** that handles file uploads, executes the PDF parsing pipeline, manages the SQLite database, and delivers data and exports via a clean REST API.
+2. A **React 19 single-page application** crafted with a custom **Peach Cream & Terracotta** skeuomorphic design system featuring 100% responsive layouts, role-based views, tactile controls, and dynamic filter-compliant PDF exports.
+3. A **Vercel rewrite proxy** on the frontend seamlessly forwards all `/api/*` calls to the backend — no CORS issues, no environment variable juggling.
+
+---
+
+## 🚀 Live Deployments
+
+| Service | URL | Platform |
+| :--- | :--- | :--- |
+| 🌐 **Frontend** | [https://uostimetableanalyzer.vercel.app](https://uostimetableanalyzer.vercel.app/) | Vercel (Vite/React) |
+| ⚙️ **Backend API** | [https://uostimetableanalyzerapi.vercel.app](https://uostimetableanalyzerapi.vercel.app/) | Vercel (Python/FastAPI) |
+
+> **How they connect:** The frontend's `vercel.json` contains a rewrite rule that transparently proxies all `/api/*` requests from the frontend domain to the backend domain. The frontend code simply calls `/api/timetable` — Vercel handles the rest.
 
 ---
 
@@ -128,20 +136,21 @@ The user interface is built on a custom **Peach Cream & Terracotta** color palet
 
 ```mermaid
 graph TD
-    subgraph FrontendApp ["Frontend Service (Vercel / CDN)"]
-        UI["Neumorphic UI (Peach Cream & Terracotta)"]
+    subgraph FrontendApp ["Frontend Service (Vercel CDN — uostimetableanalyzer.vercel.app)"]
+        UI["Neumorphic UI (React 19 + Tailwind v4)"]
         Nav["Navbar & Mobile Drawer"]
         Views["Dashboard | Student | Teacher | Room | Matrix | Table | Review"]
         ClientExport["Client PDF Export (jsPDF + AutoTable)"]
-        Config["API Client (reads VITE_API_URL)"]
+        Config["config.ts → API_BASE_URL"]
+        VercelProxy["vercel.json Rewrite Proxy\n/api/* → backend URL"]
     end
 
-    subgraph BackendApp ["Backend Service (Render / Railway)"]
-        API["Express REST API (:3000)"]
-        CORS["CORS Middleware"]
-        UploadHandler["Multer PDF Storage (/uploads)"]
-        ExportHandler["Export Deliverer (/exports)"]
-        ChildProcess["Python Bridge (child_process)"]
+    subgraph BackendApp ["Backend Service (Vercel Serverless — uostimetableanalyzerapi.vercel.app)"]
+        FastAPI["FastAPI REST App (main.py)"]
+        VercelEntry["api/index.py (Vercel Entrypoint)"]
+        CORS["CORS Middleware (allow_origins=[*])"]
+        UploadHandler["File Upload (/tmp/uploads)"]
+        ExportHandler["Export Delivery (/tmp/exports)"]
     end
 
     subgraph PythonEngine ["Python Computational Core (backend/)"]
@@ -154,15 +163,18 @@ graph TD
         DBLayer["db.py (SQLite ORM Layer)"]
     end
 
-    subgraph PersistentStorage ["Storage"]
+    subgraph PersistentStorage ["Storage (Vercel /tmp — ephemeral)"]
         SQLiteDB[("timetable.db (SQLite)")]
-        PDFStorage["uploads/ (*.pdf)"]
-        ExportStorage["exports/ (*.pdf, *.xlsx, *.csv)"]
+        PDFStorage["/tmp/uploads/ (*.pdf)"]
+        ExportStorage["/tmp/exports/ (*.pdf, *.xlsx, *.csv)"]
     end
 
-    FrontendApp -->|HTTPS / REST API| CORS --> API
-    API --> UploadHandler --> PDFStorage
-    API --> ChildProcess --> Orchestrator
+    FrontendApp -->|"/api/* rewrite"| VercelProxy
+    VercelProxy -->|"HTTPS Proxy"| CORS
+    CORS --> FastAPI
+    FastAPI --> VercelEntry
+    FastAPI --> UploadHandler --> PDFStorage
+    FastAPI --> Orchestrator
     Orchestrator --> Analyzer
     Orchestrator --> Parser --> Normalizer
     Orchestrator --> Validator
@@ -175,65 +187,61 @@ graph TD
 
 ## 📁 Project Directory Structure
 
-The project is strictly organized into two independent, self-contained directories:
+The project is strictly organized into two independent, self-contained directories — everything frontend-related is inside `frontend/`, and everything backend-related is inside `backend/`. Nothing crosses these boundaries.
 
 ```text
 TimeTableAnalyzer/
 │
-├── frontend/                       # 🌐 CLIENT APPLICATION (Vercel)
+├── frontend/                          # 🌐 CLIENT APPLICATION (Vercel)
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── AdminDataTable.tsx          # CRUD database records explorer
-│   │   │   ├── DashboardStats.tsx          # 8 KPI cards & load distribution
-│   │   │   ├── EditRecordModal.tsx         # Add/Edit record dialog
-│   │   │   ├── ExtractionReviewView.tsx    # Conflict diagnostics
-│   │   │   ├── Navbar.tsx                  # Tactile navigation & mobile drawer
-│   │   │   ├── PdfViewerModal.tsx          # Vector PDF viewer
-│   │   │   ├── RoomScheduleView.tsx        # Venue occupancy & lab tracker
-│   │   │   ├── StudentScheduleView.tsx     # Student cascading schedule view
-│   │   │   ├── TeacherScheduleView.tsx     # Faculty workload analysis
-│   │   │   ├── UploadModal.tsx             # PDF upload & parsing modal
-│   │   │   └── WeeklyMatrixView.tsx        # 2D Day × Time matrix
+│   │   │   ├── AdminDataTable.tsx     # CRUD database records explorer
+│   │   │   ├── DashboardStats.tsx     # 8 KPI cards & load distribution chart
+│   │   │   ├── EditRecordModal.tsx    # Add / Edit record dialog
+│   │   │   ├── ExtractionReviewView.tsx  # Conflict diagnostics view
+│   │   │   ├── Navbar.tsx             # Tactile navigation & mobile drawer
+│   │   │   ├── PdfViewerModal.tsx     # Vector PDF viewer modal
+│   │   │   ├── RoomScheduleView.tsx   # Venue occupancy & lab tracker
+│   │   │   ├── StudentScheduleView.tsx   # Student cascading schedule view
+│   │   │   ├── TeacherScheduleView.tsx   # Faculty workload analysis
+│   │   │   ├── UploadModal.tsx        # PDF upload & parsing modal
+│   │   │   └── WeeklyMatrixView.tsx   # 2D Day × Time matrix view
 │   │   ├── lib/
-│   │   │   └── pdfExport.ts                # Client-side jsPDF + AutoTable export
-│   │   ├── App.tsx                         # Main app controller
-│   │   ├── config.ts                       # API URL configuration (VITE_API_URL)
-│   │   ├── index.css                       # Design tokens, Neumorphic utilities
-│   │   ├── main.tsx                        # React DOM root mount
-│   │   └── types.ts                        # TypeScript interfaces & types
-│   ├── index.html                          # HTML template
-│   ├── package.json                        # Frontend dependencies & scripts
-│   ├── tsconfig.json                       # Frontend TypeScript config
-│   ├── vercel.json                         # Vercel SPA routing & cache config
-│   ├── vite.config.ts                      # Vite build & local dev proxy setup
-│   └── .env.example                        # Frontend env variables reference
+│   │   │   └── pdfExport.ts           # Client-side jsPDF + AutoTable export
+│   │   ├── App.tsx                    # Main app controller & state manager
+│   │   ├── config.ts                  # API_BASE_URL config (reads VITE_API_URL)
+│   │   ├── index.css                  # Design tokens & Neumorphic utilities
+│   │   ├── main.tsx                   # React DOM root mount
+│   │   └── types.ts                   # TypeScript interfaces & shared types
+│   ├── index.html                     # HTML entry template
+│   ├── package.json                   # Frontend npm dependencies & scripts
+│   ├── tsconfig.json                  # Frontend TypeScript config
+│   ├── vercel.json                    # Vercel SPA routing + API rewrite proxy
+│   ├── vite.config.ts                 # Vite build config & local dev proxy (:8000)
+│   └── .env.example                   # Frontend env variables reference
 │
-├── backend/                        # ⚙️ SERVER & PYTHON ENGINE (Render/Railway)
-│   ├── data/                               # Database storage directory
+├── backend/                           # ⚙️ PYTHON FASTAPI SERVER (Vercel)
+│   ├── api/
+│   │   └── index.py                   # Vercel serverless entrypoint (imports app)
 │   ├── database/
-│   │   └── db.py                           # SQLite schema, queries, versioning
+│   │   └── db.py                      # SQLite schema, queries & versioning
 │   ├── services/
-│   │   ├── exporter.py                     # ReportLab PDF, openpyxl Excel, CSV
-│   │   ├── normalizer.py                   # Time formatting, text sanitation
-│   │   ├── pdf_analyzer.py                 # PyMuPDF coordinate inspection
-│   │   ├── table_extractor.py              # pdfplumber grid extraction
-│   │   ├── timetable_parser.py             # Cell chunking & canonical mapping
-│   │   └── validator.py                    # Pandas/NumPy conflict detection
-│   ├── uploads/                            # Stored user PDF files
-│   ├── exports/                            # Generated export files
-│   ├── engine.py                           # Python CLI command orchestrator
-│   ├── package.json                        # Backend Node.js dependencies
-│   ├── requirements.txt                    # Python pip dependencies
-│   ├── server.ts                           # Express API server with CORS
-│   ├── tsconfig.json                       # Backend TypeScript config
-│   ├── Dockerfile                          # Multi-stage production container
-│   ├── render.yaml                         # Render.com deployment blueprint
-│   ├── .dockerignore                       # Docker build exclusions
-│   ├── .gitignore                          # Backend gitignore
-│   └── .env.example                        # Backend env variables reference
+│   │   ├── exporter.py                # ReportLab PDF, openpyxl Excel, CSV
+│   │   ├── normalizer.py              # Time formatting & text sanitation
+│   │   ├── pdf_analyzer.py            # PyMuPDF coordinate inspection
+│   │   ├── table_extractor.py         # pdfplumber grid extraction
+│   │   ├── timetable_parser.py        # Cell chunking & canonical mapping
+│   │   └── validator.py               # Pandas / NumPy conflict detection
+│   ├── engine.py                      # Python CLI & pipeline orchestrator
+│   ├── main.py                        # FastAPI application & all API routes
+│   ├── requirements.txt               # Python pip dependencies
+│   ├── vercel.json                    # Vercel Python runtime config
+│   ├── Dockerfile                     # Multi-stage production container (optional)
+│   ├── .dockerignore                  # Docker build exclusions
+│   └── .env.example                   # Backend env variables reference
 │
-├── .gitignore                      # Root Git ignore rules
-└── README.md                       # Comprehensive documentation
+├── .gitignore                         # Root Git ignore rules
+└── README.md                          # Project documentation (this file)
 ```
 
 ---
@@ -245,93 +253,95 @@ TimeTableAnalyzer/
 | :--- | :--- | :--- |
 | **React** | `^19.0.1` | Modern declarative UI component library |
 | **TypeScript** | `^7.0.2` | Static type checking and interfaces |
-| **Vite** | `^8.3.0` | Ultra-fast build tool & dev proxy |
+| **Vite** | `^8.3.0` | Ultra-fast build tool & local dev proxy |
 | **Tailwind CSS** | `^4.3.3` | Utility styling with CSS variable support |
 | **Lucide React** | `^0.546.0` | Consistent UI icon set |
+| **Motion** | `^12.x` | Smooth micro-animations & transitions |
 | **jsPDF** | `^4.2.1` | Client-side vector PDF generation |
-| **jspdf-autotable**| `^5.0.8` | Formatted multi-page data tables in PDFs |
+| **jspdf-autotable** | `^5.0.8` | Formatted multi-page data tables in PDFs |
 | **xlsx (SheetJS)** | `^0.18.5` | Client-side spreadsheet export |
-| **canvas-confetti**| `^1.9.4` | Micro-animation celebration triggers |
+| **canvas-confetti** | `^1.9.4` | Micro-animation celebration triggers |
 
 ### Backend Service (`backend/`)
 | Technology | Version | Purpose |
 | :--- | :--- | :--- |
-| **Node.js** | `>=20.0.0` | Server runtime environment |
-| **Express.js** | `^4.21.2` | REST API routing and middleware |
-| **CORS** | `^2.8.5` | Cross-Origin Resource Sharing handling |
-| **Multer** | `^2.4.0` | Multipart/form-data PDF file uploads |
-| **esbuild** | `^0.28.0` | High-speed server bundling |
-| **Python** | `>=3.11` | Extraction engine & mathematical operations |
+| **Python** | `>=3.11` | Core runtime for the backend service |
+| **FastAPI** | `>=0.104.0` | High-performance async REST API framework |
+| **Uvicorn** | `>=0.23.2` | ASGI server for local development |
+| **python-multipart** | `>=0.0.6` | Multipart/form-data PDF file uploads |
 | **PyMuPDF (fitz)** | `>=1.23.0` | High-speed PDF layout & coordinate analysis |
 | **pdfplumber** | `>=0.10.0` | Visual table boundary detection |
 | **pandas** | `>=1.5.0` | Tabular data grouping and conflict analysis |
 | **numpy** | `>=1.24.0` | Vector operations and matrix sorting |
 | **openpyxl** | `>=3.0.0` | Formatted Excel workbook exports |
 | **ReportLab** | `>=4.0.0` | Vector PDF document generation |
-| **SQLite3** | Built-in | Relational database storage |
+| **SQLite3** | Built-in | Relational database persistence |
 
 ---
 
 ## 🔌 REST API Reference
 
-The backend exposes a full suite of REST endpoints:
+Base URL (Production): `https://uostimetableanalyzerapi.vercel.app`
 
-| Method | Endpoint | Description | Query / Body Parameters |
+| Method | Endpoint | Description | Parameters |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/api/health` | Service health status & python binary info | None |
-| `POST` | `/api/upload` | Uploads PDF to server storage | Multipart `pdf` file |
-| `POST` | `/api/analyze` | Executes Python extraction pipeline | `{ filename, originalName }` |
-| `POST` | `/api/upload-and-analyze` | Ingests, parses, and saves PDF in 1 step | Multipart `pdf` file |
-| `POST` | `/api/sample-timetable` | Generates and loads default sample schedule | None |
-| `GET` | `/api/timetable` | Retrieves active or specific timetable | `?id=<timetable_id>` |
-| `GET` | `/api/timetables` | Lists all uploaded timetables with metadata | None |
-| `POST` | `/api/timetables/active/:id` | Sets the specified timetable as active | Path `:id` |
-| `DELETE`| `/api/timetables/:id` | Deletes a timetable and all its entries | Path `:id` |
-| `GET` | `/api/filter` | Filters entries by attributes or search query | `?program=&semester=&teacher=&room=&day=&q=` |
-| `GET` | `/api/student-schedule` | Groups entries by day for student views | `?timetableId=&program=&semester=&section=` |
-| `GET` | `/api/teacher-schedule` | Computes teaching load and day schedules | `?timetableId=&teacher=` |
-| `GET` | `/api/room-schedule` | Computes occupancy for a specific room | `?timetableId=&room=` |
-| `PUT` | `/api/records/:id` | Updates a specific class record | Path `:id`, JSON body with fields |
-| `DELETE`| `/api/records/:id` | Deletes a specific class record | Path `:id` |
-| `GET` | `/api/pdf-view/:id` | Streams the original uploaded PDF | Path `:id` |
-| `GET` | `/api/export/pdf` | Downloads filter-compliant ReportLab PDF | `?timetableId=&filterJson=&type=&filter=` |
-| `GET` | `/api/export/excel` | Downloads filter-compliant Excel sheet | `?timetableId=&filterJson=&type=&filter=` |
-| `GET` | `/api/export/csv` | Downloads filter-compliant CSV dataset | `?timetableId=&filterJson=&type=&filter=` |
+| `GET` | `/` | Service info & version | None |
+| `GET` | `/api/health` | Service health check | None |
+| `POST` | `/api/upload` | Upload PDF to server storage | Multipart `pdf` file |
+| `POST` | `/api/analyze` | Run Python extraction pipeline | `{ filename, originalName }` |
+| `POST` | `/api/upload-and-analyze` | Upload, parse & save PDF in 1 step | Multipart `pdf` file |
+| `POST` | `/api/sample-timetable` | Generate and load default sample | None |
+| `GET` | `/api/timetable` | Get active or specific timetable | `?id=<timetable_id>` |
+| `GET` | `/api/timetables` | List all uploaded timetables | None |
+| `POST` | `/api/timetables/active/:id` | Set a timetable as active | Path `:id` |
+| `DELETE` | `/api/timetables/:id` | Delete a timetable & all entries | Path `:id` |
+| `GET` | `/api/filter` | Filter entries by multiple criteria | `?program=&semester=&teacher=&room=&day=&q=` |
+| `GET` | `/api/student-schedule` | Get day-grouped schedule for students | `?timetableId=&program=&semester=&section=` |
+| `GET` | `/api/teacher-schedule` | Get teaching load & schedule | `?timetableId=&teacher=` |
+| `GET` | `/api/room-schedule` | Get occupancy for a specific room | `?timetableId=&room=` |
+| `GET` | `/api/programs` | List all unique programs | `?id=<timetable_id>` |
+| `GET` | `/api/teachers` | List all unique teachers | `?id=<timetable_id>` |
+| `GET` | `/api/rooms` | List all unique rooms | `?id=<timetable_id>` |
+| `GET` | `/api/subjects` | List all unique subjects | `?id=<timetable_id>` |
+| `PUT` | `/api/records/:id` | Update a specific class record | Path `:id`, JSON body |
+| `DELETE` | `/api/records/:id` | Delete a specific class record | Path `:id` |
+| `GET` | `/api/pdf-view/:id` | Stream the original uploaded PDF | Path `:id` |
+| `GET` | `/api/export/pdf` | Download filter-compliant ReportLab PDF | `?timetableId=&filterJson=&type=&filter=` |
+| `GET` | `/api/export/excel` | Download filter-compliant Excel sheet | `?timetableId=&filterJson=&type=&filter=` |
+| `GET` | `/api/export/csv` | Download filter-compliant CSV dataset | `?timetableId=&filterJson=&type=&filter=` |
 
 ---
 
 ## 🛠 Local Development Setup
 
 ### Prerequisites
-- **Node.js**: `v18.0.0` or higher
 - **Python**: `v3.10` or higher with `pip`
+- **Node.js**: `v18.0.0` or higher (for the frontend only)
 
 ---
 
-### 1. Backend Setup
+### 1. Backend Setup (FastAPI)
 
-Open a terminal window:
+Open a terminal and run:
 
 ```bash
 cd backend
 
-# Install Node.js dependencies
-npm install
-
 # Install Python dependencies
 pip install -r requirements.txt
 
-# Start backend server (runs on port 3000)
-npm run dev
+# Start FastAPI backend server (runs on port 8000)
+uvicorn main:app --reload
 ```
 
-The backend starts at `http://localhost:3000`. You can verify health at `http://localhost:3000/api/health`.
+The backend starts at `http://localhost:8000`.
+Verify it is running at `http://localhost:8000/api/health`.
 
 ---
 
 ### 2. Frontend Setup
 
-Open a **second** terminal window:
+Open a **second** terminal and run:
 
 ```bash
 cd frontend
@@ -344,65 +354,67 @@ npm run dev
 ```
 
 Open your browser at `http://localhost:5173`.
-During local development, Vite automatically proxies all `/api/*` calls from port `5173` to `http://localhost:3000`.
+
+During local development, Vite automatically proxies all `/api/*` calls from port `5173` → `http://localhost:8000` (configured in `vite.config.ts`). No extra environment variables needed.
 
 ---
 
 ## 🚀 Production Deployment Guide
 
-### Deploying Frontend on Vercel
+Both services are deployed independently on **Vercel**. Each has its own `vercel.json` configuration.
 
-1. Push your repository to GitHub.
-2. Log in to [Vercel](https://vercel.com/) and click **Add New Project**.
-3. Select your repository: `TimeTableAnalyzer`.
-4. Under **Project Settings**:
-   - **Root Directory**: Select `frontend` (Click *Edit* and choose the `frontend` folder).
-   - **Framework Preset**: Vite (detected automatically).
+---
+
+### Deploying the Backend (FastAPI) on Vercel
+
+1. Log in to [Vercel](https://vercel.com/) and click **Add New Project**.
+2. Select your repository: `TimeTableAnalyzer`.
+3. Under **Project Settings**:
+   - **Root Directory**: `backend`
+   - **Framework Preset**: `Other`
+4. Add the following **Environment Variable**:
+   - `VERCEL`: `1` *(tells the app to use `/tmp` for storage)*
+5. Click **Deploy**.
+
+The `backend/vercel.json` already configures `@vercel/python` runtime pointing to `api/index.py`.
+
+> ⚠️ **Note on Storage**: Vercel is a serverless platform. The `/tmp` directory is ephemeral — uploaded PDFs and the SQLite database may reset between cold starts. This is fine for demos and testing. For permanent production storage, integrate Supabase (PostgreSQL) + AWS S3.
+
+---
+
+### Deploying the Frontend (React/Vite) on Vercel
+
+1. Log in to [Vercel](https://vercel.com/) and click **Add New Project**.
+2. Select your repository: `TimeTableAnalyzer`.
+3. Under **Project Settings**:
+   - **Root Directory**: `frontend`
+   - **Framework Preset**: `Vite` (detected automatically)
    - **Build Command**: `npm run build`
    - **Output Directory**: `dist`
-5. Under **Environment Variables**, add:
-   - `VITE_API_URL`: `https://your-backend.onrender.com` *(your deployed backend URL)*
-6. Click **Deploy**.
+4. No environment variables required — the Vercel rewrite proxy in `frontend/vercel.json` handles the backend connection automatically.
+5. Click **Deploy**.
 
-> **Note**: `frontend/vercel.json` is already configured with SPA rewrites so client-side routing works flawlessly.
+### How Frontend ↔ Backend Connects in Production
 
----
+```
+Browser calls: fetch("/api/timetable")
+        ↓
+Vercel Edge (uostimetableanalyzer.vercel.app)
+        ↓  matches rewrite rule in vercel.json
+Proxies to: https://uostimetableanalyzerapi.vercel.app/api/timetable
+        ↓
+FastAPI returns JSON ✅
+        ↓
+Browser receives data, renders UI ✅
+```
 
-### Deploying Backend on Render
-
-The backend requires Node.js, Python, and system packages, which are fully containerized via `backend/Dockerfile`.
-
-1. Log in to [Render](https://render.com/).
-2. Click **New +** ➔ **Web Service**.
-3. Connect your GitHub repository: `TimeTableAnalyzer`.
-4. Configure the service settings:
-   - **Root Directory**: `backend`
-   - **Environment**: `Docker`
-   - **Dockerfile Path**: `Dockerfile`
-   - **Region**: Choose the region closest to your users.
-   - **Instance Type**: Free or Starter.
-5. Under **Environment Variables**, add:
-   - `PORT`: `3000`
-   - `CORS_ORIGIN`: `*` *(or your Vercel URL, e.g. `https://your-app.vercel.app`)*
-   - `NODE_ENV`: `production`
-   - `PYTHON_BIN`: `python3`
-6. Click **Create Web Service**.
-
-> Render will build the container, install both Python requirements and Node modules, and expose the API over HTTPS. Once deployed, copy your Render service URL and add it as `VITE_API_URL` in Vercel!
-
----
-
-### Deploying Backend on Railway
-
-1. Log in to [Railway](https://railway.app/).
-2. Click **New Project** ➔ **Deploy from GitHub repo**.
-3. Select `TimeTableAnalyzer`.
-4. In **Settings** ➔ **Root Directory**, set: `/backend`.
-5. Railway will automatically detect `backend/Dockerfile`.
-6. Add environment variable:
-   - `CORS_ORIGIN`: `*`
-7. Click **Deploy**.
-8. In the **Networking** section, click **Generate Domain** to get your public API URL.
+The key rule in `frontend/vercel.json`:
+```json
+{
+  "source": "/api/(.*)",
+  "destination": "https://uostimetableanalyzerapi.vercel.app/api/$1"
+}
+```
 
 ---
 
@@ -413,7 +425,7 @@ The backend requires Node.js, Python, and system packages, which are fully conta
 2. **Canonical Mapping**: The engine examines header blocks and index tables to construct a canonical dictionary of degree programs, batches, and shifts.
 3. **Multi-Lecture Chunking**: When multiple classes share a cell or time slot, `timetable_parser.py` isolates individual blocks using regex and text layout markers.
 4. **Data Normalization**: `normalizer.py` sanitizes time spans (e.g. `08:30-10:00`), maps faculty initials to full names, and extracts room identifiers.
-5. **Database Storage**: The parsed dataset is committed atomically to SQLite with version tracking.
+5. **Database Storage**: The parsed dataset is committed atomically to SQLite with version tracking via `database/db.py`.
 
 ### Conflict & Anomaly Detection
 - **Teacher Double-Booking**: Evaluates whether an instructor has overlapping time allocations on the same day.
@@ -424,13 +436,21 @@ The backend requires Node.js, Python, and system packages, which are fully conta
 - When filters are active (e.g. searching for a teacher or course), exports reflect **only the filtered dataset**.
 - Client-side PDF generation provides instant, crisp vector documents formatted with official header ledger strips.
 
+### Timetable Version Management
+- Multiple timetable PDFs can be uploaded and stored concurrently.
+- Only one timetable is "active" at a time — the active timetable is loaded by default across all views.
+- Switching and deleting timetables is handled via the admin sidebar with full SQLite cascade deletes.
+
 ---
 
 ## 📜 License & Credits
 
-Developed with precision for academic institutions. Built using open-source libraries:
+Developed with precision for academic institutions — University of Sargodha (UOS). Built using open-source libraries:
+
+- [FastAPI](https://fastapi.tiangolo.com/)
 - [PyMuPDF](https://github.com/pymupdf/PyMuPDF)
 - [pdfplumber](https://github.com/jsvine/pdfplumber)
 - [React](https://react.dev/) & [Vite](https://vitejs.dev/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [ReportLab](https://www.reportlab.com/) & [jsPDF](https://github.com/parallax/jsPDF)
+- [pandas](https://pandas.pydata.org/) & [NumPy](https://numpy.org/)
