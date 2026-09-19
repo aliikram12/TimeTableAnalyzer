@@ -16,7 +16,7 @@ export default defineConfig(() => {
       // Proxy API calls to the backend server during local development
       proxy: {
         '/api': {
-          target: 'http://localhost:3000',
+          target: 'http://localhost:8000',
           changeOrigin: true,
           secure: false,
         },

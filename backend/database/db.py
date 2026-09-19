@@ -9,7 +9,13 @@ import os
 import json
 from typing import List, Dict, Any, Optional
 
-DB_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
+IS_VERCEL = os.environ.get("VERCEL") == "1"
+
+if IS_VERCEL:
+    DB_DIR = "/tmp/data"
+else:
+    DB_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
+
 DB_PATH = os.path.join(DB_DIR, "timetables.db")
 
 def get_db_connection() -> sqlite3.Connection:
